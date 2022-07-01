@@ -8,7 +8,7 @@
 
 int main(void){
     int pid;
-    changePolicy(1);
+    //changePolicy(1);
     for(int n=0; n<N; n++){
         pid = fork();
 

@@ -26,7 +26,7 @@ int uptime(void);
 int setPriority(int priority);
 int changePolicy(int algo);
 int getctime(int);
-int gettime(int);
+int getttime(int);
 int getrtime(int);
 
 // ulib.c

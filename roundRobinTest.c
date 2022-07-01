@@ -13,8 +13,8 @@ void testingRoundRobin(void){
             }
             printf(1, "pid: %d\n", pid);
             printf(1, "turnaround time = %d\n", getttime(pid)-getctime(pid));
-            printf(1, "burst time = %d\n", getrtime());
-            printf(1 , "waiting time = %d\n". getttime()-getctime()-getrtime());
+            printf(1, "burst time = %d\n", getrtime(pid));
+            printf(1 , "waiting time = %d\n", getttime(pid)-getctime(pid)-getrtime(pid));
             wait();
         }
         //sleep(300);
