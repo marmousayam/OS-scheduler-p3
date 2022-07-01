@@ -125,6 +125,7 @@ int             changePolicy(int algo);
 int             getctime(int pid);
 int             getttime(int pid);
 int             getrtime(int pid);
+int             getProcStatus(int, int);
 // swtch.S
 void            swtch(struct context**, struct context*);
 

@@ -108,6 +108,7 @@ extern int sys_changePolicy(void);
 extern int sys_getctime(void);
 extern int sys_getttime(void);
 extern int sys_getrtime(void);
+extern int sys_getProcStatus(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -136,6 +137,7 @@ static int (*syscalls[])(void) = {
 [SYS_getctime]    sys_getctime,
 [SYS_getttime]    sys_getttime,
 [SYS_getrtime]    sys_getrtime,
+[SYS_getProcStatus]   sys_getProcStatus,
 };
 
 void

@@ -28,6 +28,7 @@ int changePolicy(int algo);
 int getctime(int);
 int getttime(int);
 int getrtime(int);
+int getProcStatus(int, int);
 
 // ulib.c
 int stat(const char*, struct stat*);

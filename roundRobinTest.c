@@ -2,28 +2,50 @@
 #include "stat.h"
 #include "user.h"
 
-void testingRoundRobin(void){
-    int pid;
+int main() {
 
-    for(int n=0; n<3; n++){
-        pid = fork();
-        if (pid == 0){
-            for(int i=0; i<10; i++){
-                printf(1, "/%d/ : /%d/ \n", pid, i+1);
+    for (int i = 0; i <3 ; i++) {
+        int pid= fork();
+        if ( pid== 0) {
+            for (int i = 0; i < 1000; i++) {
+                printf(1, "/%d/ : /%d/\n", getpid(), i);
             }
-            printf(1, "pid: %d\n", pid);
-            printf(1, "turnaround time = %d\n", getttime(pid)-getctime(pid));
-            printf(1, "burst time = %d\n", getrtime(pid));
-            printf(1 , "waiting time = %d\n", getttime(pid)-getctime(pid)-getrtime(pid));
-            wait();
+            sleep(300);
+            exit();
         }
-        //sleep(300);
-    
-        
     }
-}
 
-int main(void){
-    testingRoundRobin();
+    int sumTurnaround = 0;
+    int sumWaiting = 0;
+    int sumBurst = 0;
+
+    for (int i = 0; i <3 ; i++) {
+        int pid = wait();
+        int turnAround = getProcStatus(2, pid) - getProcStatus(1, pid);
+        int waitingTime = getProcStatus(4, pid);
+        int sleeping = getProcStatus(5, pid);
+        int cpuBurst = getProcStatus(3, pid);
+        sumTurnaround += turnAround;
+        sumWaiting += waitingTime;
+        sumBurst += cpuBurst;
+        printf(1, "pid: %d, ", getpid());
+        printf(1, "creation time = %d", getProcStatus(1, pid));
+        printf(1, "termination time = %d", getProcStatus(2, pid));
+        printf(1, "turnaround time = %d, ", turnAround);
+        printf(1, "waiting time = %d, ", waitingTime);
+        printf(1, "sleeping time = %d, ", sleeping);
+        printf(1, "cpu burst = %d, ", cpuBurst);
+        printf(1,"\n");
+
+
+    }
+
+    int avgTurnaround = sumTurnaround / 10;
+    int avgWaiting = sumWaiting / 10;
+    int avgCBT = sumBurst / 10;
+    printf(1, "average turnaround time: %d",avgTurnaround);
+    printf(1, "average waiting time: %d",avgWaiting);
+    printf(1, "average cpu burst time: %d",avgCBT);
+
     exit();
 }

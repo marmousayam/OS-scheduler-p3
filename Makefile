@@ -183,6 +183,7 @@ UPROGS=\
 	_zombie\
 	_roundRobinTest\
 	_priorityTest\
+	_multiLayerTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -257,6 +258,7 @@ EXTRA=\
 	.gdbinit.tmpl gdbutil\
 	_roundRobinTest.c\
 	_priorityTest.c\
+	_multiLayerTest.c\
 
 dist:
 	rm -rf dist
