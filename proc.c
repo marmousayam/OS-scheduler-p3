@@ -6,7 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
-
+#define ZERO 1
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -550,4 +550,17 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+int 
+setPriority(int priority)
+{
+  struct proc *curproc = myproc();
+  if(priority>6 || priority<1){
+    priority = 5;
+  }
+  acquire(&ptable.lock);
+  curproc->priority = priority;
+  release(&ptable.lock);
+  return 0;
 }
