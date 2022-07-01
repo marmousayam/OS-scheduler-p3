@@ -13,7 +13,7 @@ struct {
 } ptable;
 
 static struct proc *initproc;
-
+int curAlgo = 0; //default scheduler 
 int nextpid = 1;
 extern void forkret(void);
 extern void trapret(void);
@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->priority =3; //default priority
 
   release(&ptable.lock);
 
@@ -336,25 +337,24 @@ scheduler(void)
       //if(p->state != RUNNABLE)
         //continue;
       //should add the condition for choosing the right algorithm 
-      //#ifdef ZERO
-
-        //if(p->state != RUNNABLE)
-          //continue;
-      //#else 
-      //#ifdef one
+      if (curAlgo == 0){
+        if(p->state != RUNNABLE)
+          continue;
+      }
+      else if (curAlgo == 1){
         if(p->state != RUNNABLE)
           continue;
         struct proc *pt;
         struct proc *higherPriority = p;
-
         for(pt = ptable.proc; pt < &ptable.proc[NPROC]; pt++){
-          if((pt->state == RUNNABLE) && (pt->priority < higherPriority->priority)){
+          if((pt->state == RUNNABLE) && (pt->priority > higherPriority->priority)){
             higherPriority = pt;
+            continue;
           }
         }
         p = higherPriority;
-        //#endif
-        //#endif
+      }
+        
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
@@ -562,5 +562,12 @@ setPriority(int priority)
   acquire(&ptable.lock);
   curproc->priority = priority;
   release(&ptable.lock);
+  return 0;
+}
+
+int
+changePolicy(int algo)
+{
+  curAlgo = algo;
   return 0;
 }

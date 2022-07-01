@@ -97,3 +97,11 @@ sys_setPriority(void)
   argint(0, &priority);
   return setPriority(priority);
 }
+
+int
+sys_changePolicy(void)
+{
+  int algo;
+  argint(0, &algo);
+  return changePolicy(algo);
+}
