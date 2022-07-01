@@ -23,12 +23,13 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int setPriority(int priority);
+int setPriority(int priority, int pid);
 int changePolicy(int algo);
 int getctime(int);
 int getttime(int);
 int getrtime(int);
 int getProcStatus(int, int);
+int getPriority(int pid);
 
 // ulib.c
 int stat(const char*, struct stat*);

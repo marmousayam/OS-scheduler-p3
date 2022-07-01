@@ -362,8 +362,8 @@ struct proc* findReadyProcess(int *index1, int *index2, int *index3, int *index4
         }
     }
   }
-  if (*priority == 3) {//did not find any process on any of the prorities
-    *priority = 3;
+  if (*priority == 6) {//did not find any process on any of the prorities
+    *priority = 6;
     return 0;
   }
   else {
@@ -631,14 +631,18 @@ procdump(void)
 }
 
 int 
-setPriority(int priority)
+setPriority(int priority, int pid)
 {
-  struct proc *curproc = myproc();
+  struct proc *p;
   if(priority>6 || priority<1){
     priority = 5;
   }
   acquire(&ptable.lock);
-  curproc->priority = priority;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      p->priority = priority;
+    }
+  }
   release(&ptable.lock);
   return 0;
 }
@@ -742,4 +746,16 @@ getProcStatus(int type, int pid) {
             return proc->stime;
     }
     return 0;
+} 
+int
+getPriority(int pid){
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      return p->priority;
+    }
+  }
+  release(&ptable.lock);
+  return 0;
 } 

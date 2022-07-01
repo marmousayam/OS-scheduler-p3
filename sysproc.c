@@ -93,9 +93,10 @@ sys_uptime(void)
 int
 sys_setPriority(void)
 {
-  int priority;
+  int priority, pid;
   argint(0, &priority);
-  return setPriority(priority);
+  argint(1,&pid);
+  return setPriority(priority, pid);
 }
 
 int
@@ -136,4 +137,10 @@ sys_getProcStatus(void){
   if(argint(0, &type) < 0 || argint(1, &pid) < 0)
     return -1;
   return getProcStatus(type, pid);
+}
+int
+sys_getPriority(void){
+  int pid;
+  argint(0, &pid);
+  return getPriority(pid);
 }

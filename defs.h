@@ -120,12 +120,13 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
-int             setPriority(int priority);
+int             setPriority(int priority, int pid);
 int             changePolicy(int algo);
 int             getctime(int pid);
 int             getttime(int pid);
 int             getrtime(int pid);
 int             getProcStatus(int, int);
+int             getPriority(int pid);
 // swtch.S
 void            swtch(struct context**, struct context*);
 

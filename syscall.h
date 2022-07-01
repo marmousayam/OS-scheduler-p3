@@ -26,3 +26,4 @@
 #define SYS_getttime 25
 #define SYS_getrtime 26
 #define SYS_getProcStatus 27
+#define SYS_getPriority 28
