@@ -6,14 +6,14 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
-#define ZERO 1
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
 } ptable;
 
 static struct proc *initproc;
-int curAlgo = 0; //default scheduler 
+//int curAlgo = 0; //default scheduler 
 int nextpid = 1;
 extern void forkret(void);
 extern void trapret(void);
@@ -89,6 +89,10 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   p->priority =3; //default priority
+  p->ctime = ticks;
+  p->rtime = 0;
+  p->stime = 0;
+  p->tatime = 0;
   
 
   release(&ptable.lock);
@@ -132,6 +136,7 @@ userinit(void)
     panic("userinit: out of memory?");
   inituvm(p->pgdir, _binary_initcode_start, (int)_binary_initcode_size);
   p->sz = PGSIZE;
+  p->ctime = ticks;
   memset(p->tf, 0, sizeof(*p->tf));
   p->tf->cs = (SEG_UCODE << 3) | DPL_USER;
   p->tf->ds = (SEG_UDATA << 3) | DPL_USER;
@@ -265,6 +270,7 @@ exit(void)
 
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
+  curproc->ttime = ticks;
   sched();
   panic("zombie exit");
 }
@@ -338,23 +344,23 @@ scheduler(void)
       //if(p->state != RUNNABLE)
         //continue;
       //should add the condition for choosing the right algorithm 
-      if (curAlgo == 0){
-        if(p->state != RUNNABLE)
-          continue;
-      }
-      else if (curAlgo == 1){
-        if(p->state != RUNNABLE)
-          continue;
-        struct proc *pt;
-        struct proc *higherPriority = p;
-        for(pt = ptable.proc; pt < &ptable.proc[NPROC]; pt++){
-          if((pt->state == RUNNABLE) && (pt->priority > higherPriority->priority)){
-            higherPriority = pt;
-            continue;
-          }
-        }
-        p = higherPriority;
-      }
+      //if (curAlgo == 0){
+      //  if(p->state != RUNNABLE)
+      //    continue;
+      //}
+      //else if (curAlgo == 1){
+      //  if(p->state != RUNNABLE)
+      //    continue;
+      //  struct proc *pt;
+      //  struct proc *higherPriority = p;
+      //  for(pt = ptable.proc; pt < &ptable.proc[NPROC]; pt++){
+      //    if((pt->state == RUNNABLE) && (pt->priority > higherPriority->priority)){
+      //      higherPriority = pt;
+      //      continue;
+      //    }
+      //  }
+      //  p = higherPriority;
+      //}
         
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
@@ -362,7 +368,6 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
-      p->tickTimer = 0;
       swtch(&(c->scheduler), p->context);
       switchkvm();
 
@@ -569,17 +574,65 @@ setPriority(int priority)
 int
 changePolicy(int algo)
 {
-  curAlgo = algo;
+  //curAlgo = algo;
+  return 0;
+}
+
+void updateTimes()
+{
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p< &ptable.proc[NPROC]; p++){
+    switch(p->state){
+      case RUNNABLE:
+        p->tatime++;
+        break;
+      case SLEEPING:
+        p->stime++;
+        break;
+      case RUNNING:
+        p->rtime++;
+        break;
+        default:
+        ;
+    }
+  }
+  release(&ptable.lock);
+}
+int
+getctime(int pid){
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p< &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      return p-> ctime;
+    }
+  }
+  release(&ptable.lock);
   return 0;
 }
 int
-increaseTickTimer(void)
-{
-  struct proc *p = myproc();
-  int timer;
-  acquire(ptable.lock);
-  p->tickTimer = p->tickTimer+1;
-  timer = p->tickTimer;
-  release(ptable.lock);
-  return timer;
+getttime(int pid){
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p< &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      return p-> ttime;
+    }
+  }
+  release(&ptable.lock);
+  return 0;
 }
+int
+getrtime(int pid){
+  struct proc *p;
+  acquire(&ptable.lock);
+  for(p = ptable.proc; p< &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+      return p-> rtime;
+    }
+  }
+  release(&ptable.lock);
+  return 0;
+}
+

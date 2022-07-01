@@ -25,6 +25,9 @@ int sleep(int);
 int uptime(void);
 int setPriority(int priority);
 int changePolicy(int algo);
+int getctime(int);
+int gettime(int);
+int getrtime(int);
 
 // ulib.c
 int stat(const char*, struct stat*);

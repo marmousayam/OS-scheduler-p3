@@ -22,3 +22,6 @@
 #define SYS_close  21
 #define SYS_setPriority 22
 #define SYS_changePolicy 23
+#define SYS_getctime 24
+#define SYS_getttime 25
+#define SYS_getrtime 26

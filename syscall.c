@@ -105,6 +105,9 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_setPriority(void);
 extern int sys_changePolicy(void);
+extern int sys_getctime(void);
+extern int sys_getttime(void);
+extern int sys_getrtime(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -130,6 +133,9 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_setPriority]  sys_setPriority,
 [SYS_changePolicy]  sys_changePolicy,
+[SYS_getctime]    sys_getctime,
+[SYS_getttime]    sys_getttime,
+[SYS_getrtime]    sys_getrtime,
 };
 
 void

@@ -105,3 +105,27 @@ sys_changePolicy(void)
   argint(0, &algo);
   return changePolicy(algo);
 }
+
+int
+sys_getctime(void)
+{
+  int pid;
+  argint(0, &pid);
+  return getctime(pid);
+
+}
+
+int
+sys_getttime(void)
+{
+  int pid;
+  argint(0, &pid); 
+  return getttime(pid);
+}
+
+int 
+sys_getrtime(void){
+  int pid;
+  argint(0, &pid);
+  return getrtime(pid);
+}

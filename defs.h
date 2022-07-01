@@ -122,6 +122,9 @@ void            wakeup(void*);
 void            yield(void);
 int             setPriority(int priority);
 int             changePolicy(int algo);
+int             getctime(int pid);
+int             getttime(int pid);
+int             getrtime(int pid);
 // swtch.S
 void            swtch(struct context**, struct context*);
 
