@@ -89,6 +89,7 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   p->priority =3; //default priority
+  
 
   release(&ptable.lock);
 
@@ -361,7 +362,7 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
-
+      p->tickTimer = 0;
       swtch(&(c->scheduler), p->context);
       switchkvm();
 
@@ -570,4 +571,15 @@ changePolicy(int algo)
 {
   curAlgo = algo;
   return 0;
+}
+int
+increaseTickTimer(void)
+{
+  struct proc *p = myproc();
+  int timer;
+  acquire(ptable.lock);
+  p->tickTimer = p->tickTimer+1;
+  timer = p->tickTimer;
+  release(ptable.lock);
+  return timer;
 }
