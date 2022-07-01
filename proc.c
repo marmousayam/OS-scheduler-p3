@@ -336,25 +336,25 @@ scheduler(void)
       //if(p->state != RUNNABLE)
         //continue;
       //should add the condition for choosing the right algorithm 
-      #ifdef ZERO
+      //#ifdef ZERO
 
-        if(p->state != RUNNABLE)
-          continue;
-      #else 
-      #ifdef one
+        //if(p->state != RUNNABLE)
+          //continue;
+      //#else 
+      //#ifdef one
         if(p->state != RUNNABLE)
           continue;
         struct proc *pt;
         struct proc *higherPriority = p;
 
-        for(pt = ptable.printf; pt < &ptable.proc[NPROC]; pt++){
+        for(pt = ptable.proc; pt < &ptable.proc[NPROC]; pt++){
           if((pt->state == RUNNABLE) && (pt->priority < higherPriority->priority)){
             higherPriority = pt;
           }
         }
         p = higherPriority;
-        #endif
-        #endif
+        //#endif
+        //#endif
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
